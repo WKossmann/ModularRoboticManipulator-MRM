@@ -71,7 +71,7 @@ void JointT1::runJoint(){
 }
 
 void JointT1::startHoming(){
-  stepper->moveTo(-T1_MIN_STEP);
+  stepper->moveTo(-T1_MAX_STEP);
 }
     
 void JointT1::hitHome(){

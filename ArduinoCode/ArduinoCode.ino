@@ -5,7 +5,7 @@
 
 JointT1 JA(A_STEP_PIN, A_DIR_PIN, A_ENABLE_PIN, A_ENDSTOP_PIN);
 JointT2 JB(B_STEP_PIN, B_DIR_PIN, B_ENABLE_PIN, B_ENDSTOP_PIN, B_INITIAL_ANGLE);
-JointT2 JC(C_STEP_PIN, B_DIR_PIN, C_ENABLE_PIN, C_ENDSTOP_PIN, C_INITIAL_ANGLE);
+JointT2 JC(C_STEP_PIN, C_DIR_PIN, C_ENABLE_PIN, C_ENDSTOP_PIN, C_INITIAL_ANGLE);
 
 const int tam_cmd = 50;
 char cmd[tam_cmd];
@@ -33,7 +33,6 @@ void loop() {
     Serial.print("Received: ");
     Serial.println(cmd);
     interpretaComando();
-    Serial.println(">> End");
   }
 
   JA.runJoint();
@@ -139,6 +138,7 @@ void interpretaComando(){
   }
   cleanCMD();  
 }
+//
 void goHomeAll(){
   bool hit_a = false, hit_b = false, hit_c = false;
   JA.startHoming();

@@ -87,7 +87,6 @@ long int JointT2::radToStep(double _rad){
 void JointT2::startHoming(){
   stepper->moveTo(2*T2_MAX_STEP);
 }
-    
 void JointT2::hitHome(){
   double radInit = initDegree*M_PI/180.0;
   long int _step = radToStep(radInit);
