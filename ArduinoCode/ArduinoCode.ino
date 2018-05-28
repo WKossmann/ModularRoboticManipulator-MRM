@@ -10,6 +10,7 @@ JointT2 JC(C_STEP_PIN, C_DIR_PIN, C_ENABLE_PIN, C_ENDSTOP_PIN, C_INITIAL_ANGLE);
 const int tam_cmd = 50;
 char cmd[tam_cmd];
 char num[tam_cmd];
+bool moving = false;
 
 void goHomeAll();
 void interpretaComando();
@@ -30,11 +31,15 @@ void setup() {
 void loop() {
   if(Serial.available()){
     Serial.readBytesUntil(';', cmd, tam_cmd);
-    Serial.print("Received: ");
-    Serial.println(cmd);
+    //Serial.print("Received: ");
+    //Serial.println(cmd);
     interpretaComando();
   }
 
+  if(moving == true && !JA.stepper->isRunning() && !JB.stepper->isRunning() && !JC.stepper->isRunning()){
+    Serial.println("K");
+    moving = false;
+  }
   JA.runJoint();
   JB.runJoint();
   JC.runJoint();
@@ -46,13 +51,20 @@ void interpretaComando(){
     
     //Comand G1 (Moves to a target angle (in degree)):
     if(cmd[1] == '1'){
-      int index = 3;
+      int index = 2;
       // Run through the string, catching every comands    
       while(cmd[index] != '\0'){
+        
         // Blank space, jump over  
         if(cmd[index]==' '){
           index++;
         }
+
+        //Number without a joint as reference  (error)
+        else if(cmd[index] >= '0' && cmd[index] <= '9'){
+          break;
+        }
+
         // Comand for joint A
         else if(cmd[index]=='A' || cmd[index]=='a'){
           index++;
@@ -60,18 +72,18 @@ void interpretaComando(){
           if(cmd[index] >= '0' && cmd[index] <= '9'){
             int counter = 0;
             //Read the whole number
-            while(!(cmd[index] == ' ' || cmd[index] == '\0')){
+            while(!(cmd[index] == ' ' || cmd[index] == '\0'|| (cmd[index]>='a' && cmd[index]<='c') || (cmd[index]>='A' && cmd[index]<='C'))){
                 num[counter] = cmd[index];
                 counter++;
                 index++;
             }
             double valor = atof(num);
             JA.moveToDegree(valor);
-          }else{
-              index++;
+            moving = true;
+          }else{ //A referenced joint without any value associated (error)
+              break;
           }
           cleanNUM();
-          index++;
         }
 
         // Comand for joint B
@@ -81,18 +93,18 @@ void interpretaComando(){
           if(cmd[index] >= '0' && cmd[index] <= '9'){
             int counter = 0;
             //Read the whole number
-            while(!(cmd[index] == ' ' || cmd[index] == '\0')){
+            while(!(cmd[index] == ' ' || cmd[index] == '\0' || (cmd[index]>='a' && cmd[index]<='c') || (cmd[index]>='A' && cmd[index]<='C'))){
                 num[counter] = cmd[index];
                 counter++;
                 index++;
             }
             double valor = atof(num);
             JB.moveToDegree(valor);
-          }else{
-              index++;
+            moving = true;
+          }else{ //A referenced joint without any value associated (error)
+              break;
           }
           cleanNUM();
-          index++;
         }
         
         // Comand for joint C
@@ -102,21 +114,22 @@ void interpretaComando(){
           if(cmd[index] >= '0' && cmd[index] <= '9'){
             int counter = 0;
             //Read the whole number
-            while(!(cmd[index] == ' ' || cmd[index] == '\0')){
+            while(!(cmd[index] == ' ' || cmd[index] == '\0' || (cmd[index]>='a' && cmd[index]<='c') || (cmd[index]>='A' && cmd[index]<='C'))){
                 num[counter] = cmd[index];
                 counter++;
                 index++;
             }
             double valor = atof(num);
             JC.moveToDegree(valor);
-          }else{
-              index++;
+            moving = true;
+          }else{ //A referenced joint without any value associated (error)
+              break;
           }
           cleanNUM();
-          index++;
         }
       }
     }
+
     //Comand G28 (Moves to endstops (detecting it)): 
     if(cmd[1]=='2' && cmd[2]=='8'){
       goHomeAll();
@@ -128,11 +141,11 @@ void interpretaComando(){
     
     //Comand M114 (Get current positions):
     if(cmd[1] == '1' && cmd[2] == '1' && cmd[3] == '4'){
-      Serial.print(">> A-> ");
+      //Serial.print(">> A-> ");
       JA.getPosition();
-      Serial.print(">> B-> ");
+      //Serial.print(">> B-> ");
       JB.getPosition();
-      Serial.print(">> C-> ");
+      //Serial.print(">> C-> ");
       JC.getPosition();
     }
   }
@@ -148,14 +161,14 @@ void goHomeAll(){
     if(digitalRead(B_ENDSTOP_PIN) == LOW && hit_b == false){
       JB.hitHome();
       hit_b = true;
-      Serial.println(">> HIT B");
+      //Serial.println(">> HIT B");
     }else{
       JB.runJoint();
     }
     if(digitalRead(C_ENDSTOP_PIN) == LOW && hit_c == false){
       JC.hitHome();
       hit_c = true;
-      Serial.println(">> HIT C");
+      //Serial.println(">> HIT C");
     }else{
       JC.runJoint();
     }
@@ -167,12 +180,13 @@ void goHomeAll(){
     if(digitalRead(A_ENDSTOP_PIN) == LOW && hit_a == false){
       JA.hitHome();
       hit_a = true;
-      Serial.println(">> HIT A");
+      //Serial.println(">> HIT A");
       break;
     }else{
       JA.runJoint();
     }
   }
+  Serial.println("K");
 }
 void cleanCMD(){
   for(int i=0; i<tam_cmd;i++){

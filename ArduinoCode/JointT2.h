@@ -24,9 +24,9 @@ class JointT2{
     void startHoming();
     void hitHome();
     void getPosition();
+    AccelStepper* stepper;
  
   private:
-    AccelStepper* stepper;
     int stepPIN;
     int dirPIN;
     int enablePIN;

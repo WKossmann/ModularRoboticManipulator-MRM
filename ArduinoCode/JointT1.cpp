@@ -18,9 +18,9 @@ void JointT1::startConfig(){
 }
 
 void JointT1::moveToDegree(double degree){
-  Serial.print(">> ");
-  Serial.print(stepper->currentPosition());
-  Serial.print(" -> ");
+  // Serial.print(">> ");
+  // Serial.print(stepper->currentPosition());
+  // Serial.print(" -> ");
 
   long int targetStep = (long int) degree*T1_STEP_PER_DEGREE;
   if(targetStep > T1_MAX_STEP){
@@ -30,13 +30,13 @@ void JointT1::moveToDegree(double degree){
   }
   stepper->moveTo(targetStep);
 
-  Serial.println(targetStep);
+  // Serial.println(targetStep);
 }
 
 void JointT1::moveToStep(long int step){
-  Serial.print(">> ");
-  Serial.print(stepper->currentPosition());
-  Serial.print(" -> ");
+  //Serial.print(">> ");
+  //Serial.print(stepper->currentPosition());
+  //Serial.print(" -> ");
 
   long int targetStep = step;
   if(targetStep > T1_MAX_STEP){
@@ -46,13 +46,13 @@ void JointT1::moveToStep(long int step){
   }
   stepper->moveTo(targetStep);
 
-  Serial.println(targetStep);
+  //Serial.println(targetStep);
 }
 
 void JointT1::moveToRadian(double radian){
-  Serial.print(">> ");
-  Serial.print(stepper->currentPosition());
-  Serial.print(" -> ");
+  //Serial.print(">> ");
+  //Serial.print(stepper->currentPosition());
+  //Serial.print(" -> ");
 
   double degree = (radian*PI)/180.0;
   long int targetStep = (long int) degree*T1_STEP_PER_DEGREE;
@@ -63,7 +63,7 @@ void JointT1::moveToRadian(double radian){
   }
   stepper->moveTo(targetStep);
 
-  Serial.println(targetStep);
+  //Serial.println(targetStep);
 }
 
 void JointT1::runJoint(){
@@ -82,8 +82,8 @@ void JointT1::hitHome(){
 void JointT1::getPosition(){
   long int steps = stepper->currentPosition();
   double angle = steps/T1_STEP_PER_DEGREE;
-  Serial.print("Step: ");
-  Serial.print(steps);
-  Serial.print(" Angle: ");
-  Serial.println(angle);
+  //Serial.print("Step: ");
+  //Serial.print(steps);
+  //Serial.print(" Angle: ");
+  //Serial.println(angle);
 }
