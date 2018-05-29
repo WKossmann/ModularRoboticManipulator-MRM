@@ -22,6 +22,7 @@ public:
 
     int init(std::string _port);
 
+    //Comunication:
     void sendMsgNoWait(std::string _msg);
     void sendMsg(std::string _msg);
     void sendMoveNoWait(double _value, int _joint);
@@ -29,7 +30,9 @@ public:
     void sendMoveMultiNoWait(double _value[], int _joint[], int size);
     void sendMoveMulti(double _value[], int _joint[], int size);
     void sendHome();
-
+    
+    //Kinematics functions
+    bool validAngle();
     void jointT1FowardK(double rad, double mat[4][4]);
     void jointT2FowardK(double rad, double mat[4][4]);
 
@@ -136,6 +139,10 @@ void ModularArm::sendHome(){
     arduino.read(discart, 4);
 
     sendMsg("G28");   
+}
+
+bool validAngle(){
+
 }
 
 void ModularArm::jointT1FowardK(double rad, double mat[4][4]){
