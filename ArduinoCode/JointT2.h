@@ -6,8 +6,8 @@
 #define T2_MAX_STEP         277600
 #define T2_MIN_STEP         159600
 #define T2_STEP_PER_MM      2560
-#define T2_MAX_SPEED        51200
-#define T2_ACCELERATION     7200
+#define T2_MAX_SPEED        12800
+#define T2_ACCELERATION     3600
 
 class JointT2{
   public:

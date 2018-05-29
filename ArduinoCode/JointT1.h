@@ -6,8 +6,8 @@
 #define T1_MAX_STEP         13100
 #define T1_MIN_STEP         0
 #define T1_STEP_PER_DEGREE  44.44448
-#define T1_MAX_SPEED        51200
-#define T1_ACCELERATION     7200
+#define T1_MAX_SPEED        12800
+#define T1_ACCELERATION     3600
 
 class JointT1{
   public:
