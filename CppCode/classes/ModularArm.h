@@ -4,8 +4,7 @@
  *  
  * Created on 27 October 2018  
  * 
- * Based on SimpleCommArduino.h class made by 
- * Orivaldo Santana
+ * Based on SimpleCommArduino.h class made by Orivaldo Santana
 */
 
 #ifndef ModularArm_h
@@ -13,6 +12,11 @@
 
 #include "SimpleCommArduino.h"
 #include <iostream>
+#include <cmath>
+
+#define J2_A 9.5
+#define J2_B 9.5
+#define J1_H 7.6
 
 class ModularArm
 {
@@ -31,10 +35,11 @@ public:
     void sendMoveMulti(double _value[], int _joint[], int size);
     void sendHome();
     
-    //Kinematics functions
-    bool validAngle();
+    //Kinematics functions:
+    void multiMatrix(double A[4][4], double B[4][4], double R[4][4]);
     void jointT1FowardK(double rad, double mat[4][4]);
     void jointT2FowardK(double rad, double mat[4][4]);
+    bool ForwardK(double angles[], int type[], int size, double pos[3]);
 
 private:
 
@@ -141,8 +146,16 @@ void ModularArm::sendHome(){
     sendMsg("G28");   
 }
 
-bool validAngle(){
-
+void ModularArm::multiMatrix(double A[4][4], double B[4][4], double R[4][4]){
+    for(int i = 0; i < 4; ++i){
+        for(int j = 0; j < 4; ++j){
+            R[i][j] = 0;
+            for(int k = 0; k < 4; ++k)
+            {
+                R[i][j] += A[i][k] * B[k][j];
+            }
+        }
+    }
 }
 
 void ModularArm::jointT1FowardK(double rad, double mat[4][4]){
@@ -189,6 +202,44 @@ void ModularArm::jointT2FowardK(double rad, double mat[4][4]){
     mat[1][3] = 0;
     mat[2][3] = J2_A + J2_B*sin(rad);
     mat[3][3] = 1;
+}
+
+bool ModularArm::ForwardK(double angles[], int type[], int size, double pos[3]){
+    double  T[4][4];
+    double  R[4][4];
+    double RT[4][4];
+    double  I[4][4] = { {1,0,0,0},
+                        {0,1,0,0},
+                        {0,0,1,0},
+                        {0,0,0,1}   };
+
+    for(int i=0;i<size;i++){
+        switch(type[i]){
+            case 1:
+                jointT1FowardK(angles[i]*M_PI/180.0, T);                
+            break;
+            case 2:
+                jointT2FowardK(angles[i]*M_PI/180.0, T);
+            break;
+            default:
+                return -1;
+            break;
+        }
+        if(i==0){
+            multiMatrix(I,T,R);
+        }else{
+            for(int i=0;i<4;i++){
+                for(int j=0;j<4;j++){
+                    RT[i][j] = R[i][j];
+                }
+            }
+            multiMatrix(RT,T,R);
+        }
+    }
+
+    pos[0] = R[0][3];
+    pos[1] = R[1][3];
+    pos[2] = R[2][3];
 }
 
 

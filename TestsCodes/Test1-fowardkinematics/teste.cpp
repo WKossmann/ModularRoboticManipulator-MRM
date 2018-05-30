@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cmath>
 
-using namespace std;
+// using namespace std;
 #define J2_A 9.5
 #define J2_B 9.5
 #define J1_H 7.6
@@ -80,9 +80,9 @@ int main(){
     multiMatrix(M0T1, M1T2, RES1);
     multiMatrix(RES1, M1T2, RES2);
 
-    cout << "X : " << RES2[0][3] << endl;
-    cout << "Y : " << RES2[1][3] << endl;
-    cout << "Z : " << RES2[2][3] << endl;
+    std::cout << "X : " << RES2[0][3] << std::endl;
+    std::cout << "Y : " << RES2[1][3] << std::endl;
+    std::cout << "Z : " << RES2[2][3] << std::endl;
 
     return 0;
 }
