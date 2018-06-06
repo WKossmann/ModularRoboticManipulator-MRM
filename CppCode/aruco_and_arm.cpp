@@ -10,6 +10,7 @@ int main(){
     arm.start();
     vision.start();
 
+    //Definir angulacao:
     double val[5][2] = {    {90.0 ,130.0},
                             {100.0,120.0},
                             {110.0,110.0},
@@ -25,6 +26,8 @@ int main(){
         vision.getVisualPosition(x[i],y[i]);
         std::cout << "X: " << x[i] << " Y: " << y[i] << std::endl; 
     }
+
+    //TODO : Salvar em arquivo
 
     return 0;
 }
