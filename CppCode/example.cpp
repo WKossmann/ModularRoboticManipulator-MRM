@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
 	double val[3] = {90.0,130.0};
 	int ind[3] = {1,2};
 	
-	arm.init(); // Start serial comunication and reset stepper positions by sending the arm to home
+	arm.start(); // Start serial comunication and reset stepper positions by sending the arm to home
 	arm.sendMove(180,0); // Move the '0' joint to angle of 180.0 degree
 	arm.sendMoveMulti(val, ind, 2); // Move two joints at the same time (works for how many joints u want)
 	arm.sendMsg("G28"); // Send a raw msg to the arm (only do that if u know what u doing)

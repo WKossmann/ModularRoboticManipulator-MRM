@@ -78,7 +78,7 @@ void interpretaComando(){
                 index++;
             }
             double valor = atof(num);
-            JA.moveToDegree(valor);
+            // JA.moveToDegree(valor);
             moving = true;
           }else{ //A referenced joint without any value associated (error)
               break;
@@ -157,6 +157,7 @@ void goHomeAll(){
   JA.startHoming();
   JB.startHoming();
   JC.startHoming();
+  JA.hitHome();
   while(true){
     if(digitalRead(B_ENDSTOP_PIN) == LOW && hit_b == false){
       JB.hitHome();
@@ -176,16 +177,16 @@ void goHomeAll(){
       break;
     }
   }
-  while(true){
-    if(digitalRead(A_ENDSTOP_PIN) == LOW && hit_a == false){
-      JA.hitHome();
-      hit_a = true;
-      //Serial.println(">> HIT A");
-      break;
-    }else{
-      JA.runJoint();
-    }
-  }
+  // while(true){
+  //   if(digitalRead(A_ENDSTOP_PIN) == LOW && hit_a == false){
+  //     JA.hitHome();
+  //     hit_a = true;
+  //     //Serial.println(">> HIT A");
+  //     break;
+  //   }else{
+  //     JA.runJoint();
+  //   }
+  // }
   Serial.println("K");
 }
 void cleanCMD(){

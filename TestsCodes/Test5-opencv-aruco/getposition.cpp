@@ -1,7 +1,5 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/aruco.hpp>
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
 #include <iostream>
 
 using namespace std;
@@ -9,26 +7,30 @@ using namespace cv;
 
 #define DICTIONARY_ID 16
 
-int main(int argc, char *argv[]) {
+Ptr<aruco::DetectorParameters> detectorParams = aruco::DetectorParameters::create();
+Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::PREDEFINED_DICTIONARY_NAME(DICTIONARY_ID));
+vector< int > ids;
+vector< vector< Point2f > > corners, rejected;
+Mat image, imageCopy;
+VideoCapture inputVideo;
 
-    Ptr<aruco::DetectorParameters> detectorParams = aruco::DetectorParameters::create();
-    Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::PREDEFINED_DICTIONARY_NAME(DICTIONARY_ID));
+bool getVisualPosition(){
+    //Discart 5 frames to get the newest frame
+    for(int i=0;i<5;i++){
+        inputVideo.grab();
+        inputVideo.retrieve(image);
+    }
 
-    VideoCapture inputVideo;
+    // detect markers and estimate pose
+    aruco::detectMarkers(image, dictionary, corners, ids, detectorParams, rejected);
+}
+
+
+int main(int argc, char *argv[]) {    
     inputVideo.open(0);
-    
+
     while(1) {
-        Mat image, imageCopy;
-        for(int i=0;i<5;i++){
-            inputVideo.grab();
-            inputVideo.retrieve(image);
-        }
-
-        vector< int > ids;
-        vector< vector< Point2f > > corners, rejected;
-
-        // detect markers and estimate pose
-        aruco::detectMarkers(image, dictionary, corners, ids, detectorParams, rejected);
+        getVisualPosition();
 
         // draw results
         image.copyTo(imageCopy);
@@ -39,6 +41,8 @@ int main(int argc, char *argv[]) {
 
             cout << "centro: " <<  ponto.x << " " << ponto.y << endl;
             aruco::drawDetectedMarkers(imageCopy, corners, ids);
+        }else{
+            cout << "Achei nada n" << endl;
         }
 
         imshow("out", imageCopy);

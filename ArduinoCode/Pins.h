@@ -11,11 +11,11 @@
 #define B_DIR_PIN           61
 #define B_ENABLE_PIN        56
 #define B_ENDSTOP_PIN       14
-#define B_INITIAL_ANGLE     150.0 // Value of de angle (in degree) where the joint hit the endstop
+#define B_INITIAL_ANGLE     145.5 // Value of de angle (in degree) where the joint hit the endstop
 
 //Pinage of the third Joint (Type 2 Joint)
 #define C_STEP_PIN          46
 #define C_DIR_PIN           48
 #define C_ENABLE_PIN        62
 #define C_ENDSTOP_PIN       18
-#define C_INITIAL_ANGLE     145.0
+#define C_INITIAL_ANGLE     142.0
