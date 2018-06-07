@@ -39,7 +39,7 @@ public:
     void multiMatrix(double A[4][4], double B[4][4], double R[4][4]);
     void jointT1FowardK(double rad, double mat[4][4]);
     void jointT2FowardK(double rad, double mat[4][4]);
-    bool ForwardK(double angles[], int type[], int size, double pos[3]);
+    void ForwardK(double angles[], int type[], int size, double pos[3]);
 
 private:
 
@@ -204,7 +204,7 @@ void ModularArm::jointT2FowardK(double rad, double mat[4][4]){
     mat[3][3] = 1;
 }
 
-bool ModularArm::ForwardK(double angles[], int type[], int size, double pos[3]){
+void ModularArm::ForwardK(double angles[], int type[], int size, double pos[3]){
     double  T[4][4];
     double  R[4][4];
     double RT[4][4];
@@ -222,7 +222,7 @@ bool ModularArm::ForwardK(double angles[], int type[], int size, double pos[3]){
                 jointT2FowardK(angles[i]*M_PI/180.0, T);
             break;
             default:
-                return -1;
+                // return -1;
             break;
         }
         if(i==0){

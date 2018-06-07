@@ -23,9 +23,9 @@ void JointT2::startConfig(){
 }
 
 void JointT2::moveToDegree(double _degree){
-  //Serial.print(">> ");
-  //Serial.print(stepper->currentPosition());
-  //Serial.print(" -> ");
+  // Serial.print(">> ");
+  // Serial.print(stepper->currentPosition());
+  // Serial.print(" -> ");
 
   long int targetStep = radToStep((_degree*M_PI/180.0));
   if(targetStep > T2_MAX_STEP){
@@ -35,13 +35,13 @@ void JointT2::moveToDegree(double _degree){
   }
   stepper->moveTo(targetStep);
 
-  //Serial.println(targetStep);
+  // Serial.println(targetStep);
 }
 
 void JointT2::moveToStep(long int step){
-  //Serial.print(">> ");
-  //Serial.print(stepper->currentPosition());
-  //Serial.print(" -> ");
+  // Serial.print(">> ");
+  // Serial.print(stepper->currentPosition());
+  // Serial.print(" -> ");
 
   long int targetStep = step;
   if(targetStep > T2_MAX_STEP){
@@ -51,13 +51,13 @@ void JointT2::moveToStep(long int step){
   }
   stepper->moveTo(targetStep);
 
-  //Serial.println(targetStep);
+  // Serial.println(targetStep);
 }
 
 void JointT2::moveToRadian(double _rad){
-  //Serial.print(">> ");
-  //Serial.print(stepper->currentPosition());
-  //Serial.print(" -> ");
+  // Serial.print(">> ");
+  // Serial.print(stepper->currentPosition());
+  // Serial.print(" -> ");
 
   long int targetStep = radToStep(_rad);
   if(targetStep > T2_MAX_STEP ){
@@ -67,7 +67,7 @@ void JointT2::moveToRadian(double _rad){
   }
   stepper->moveTo(targetStep);
 
-  //Serial.println(targetStep);
+  // Serial.println(targetStep);
 }
 
 void JointT2::runJoint(){

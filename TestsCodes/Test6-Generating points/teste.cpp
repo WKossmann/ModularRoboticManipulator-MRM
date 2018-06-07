@@ -5,10 +5,10 @@
 
 int main(){
     ModularArm arm;
-    Vision vision;
+    // Vision vision;
 
     arm.start();
-    vision.start();
+    // vision.start();
 
     //Definir angulacao:
 
@@ -21,7 +21,7 @@ int main(){
 	
 	int cont = 0;
 
-    for(int i=140;i>=70;i-=5){
+    for(int i=90;i>=70;i-=5){
         if(crescente){
             for(int j=70;j<=140;j+=5){
                 angle[1] = i-90;
@@ -33,7 +33,7 @@ int main(){
                     angle[1]+=90;
                     angle[2]+=90;
                     arm.sendMoveMulti(angle,joint, 3);
-                    vision.getVisualPosition(x,y);
+                    // vision.getVisualPosition(x,y);
                     std::cout << cont << " >> B:" << i << " C:" << j << " -> X:" << (int)x << " Y:" << (int)y << std::endl;
                 }   
             }
@@ -49,7 +49,7 @@ int main(){
                     angle[1]+=90;
                     angle[2]+=90;
                     arm.sendMoveMulti(angle,joint, 3);
-                    vision.getVisualPosition(x,y);
+                    // vision.getVisualPosition(x,y);
                     std::cout << cont << " >> B:" << i << " C:" << j << " -> X:" << (int)x << " Y:" << (int)y << std::endl;
                 }
             }
