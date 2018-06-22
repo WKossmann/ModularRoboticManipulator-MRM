@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 	// arm.ForwardK(angle,type,3,pos);
 
 	// cout << "X: " << pos[0] << endl;
-	// cout << "Y: " << pos[1] << endl;
+	// cout << "Y: " << pos[1] << endl//;
 	// cout << "Z: " << pos[2] << endl;
 	
 	double val[3] = {90.0,130.0};

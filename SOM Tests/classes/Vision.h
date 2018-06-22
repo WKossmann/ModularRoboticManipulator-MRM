@@ -3,6 +3,8 @@
 
 #include <opencv2/highgui.hpp>
 #include <opencv2/aruco.hpp>
+#include <opencv2/core.hpp>
+#include <opencv/cv.hpp>
 #include <iostream>
 
 #define DICTIONARY_ID 16
@@ -13,7 +15,8 @@ public:
     Vision();
     ~Vision();
     bool start();
-    bool getVisualPosition(double& x, double& y);
+    bool getVisualPosition(int& x, int& y);
+    void showPoints(int x[], int y[], int size, cv::String directory);
 
 private:
     cv::Ptr<cv::aruco::DetectorParameters> detectorParams;
@@ -27,6 +30,7 @@ private:
 Vision::Vision(){
     detectorParams = cv::aruco::DetectorParameters::create();
     dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::PREDEFINED_DICTIONARY_NAME(DICTIONARY_ID));
+    cv::namedWindow("Windown", cv::WINDOW_AUTOSIZE);
 }
 Vision::~Vision(){ 
 }
@@ -41,7 +45,7 @@ bool Vision::start(){
     }
 }
 
-bool Vision::getVisualPosition(double& _x, double& _y){
+bool Vision::getVisualPosition(int& _x, int& _y){
     //Discart 5 frames to get the newest frame
     for(int i=0;i<5;i++){
         inputVideo.grab();
@@ -56,12 +60,12 @@ bool Vision::getVisualPosition(double& _x, double& _y){
     // draw results
     int sizeIds = ids.size();
     if(sizeIds <=0){
-        std::cout << "Found nothing, Jon Snow" << std::endl;
+        // std::cout << "Found nothing, Jon Snow" << std::endl;
         return false;
     }else for(int i =0;i<sizeIds;i++) {
         if(ids[i] == 213){
-            _x = (corners[0][0].x + corners[0][1].x + corners[0][2].x + corners[0][3].x)/4;
-            _y = (corners[0][0].y + corners[0][1].y + corners[0][2].y + corners[0][3].y)/4;
+            _x = (int)((corners[i][0].x + corners[i][1].x + corners[i][2].x + corners[i][3].x)/4);
+            _y = (int)((corners[i][0].y + corners[i][1].y + corners[i][2].y + corners[i][3].y)/4);
 
             // std::cout << ids[i] << " >> X: " <<  (int)_x << " Y: " << (int)_y << std::endl;
             
@@ -72,6 +76,18 @@ bool Vision::getVisualPosition(double& _x, double& _y){
         }
     }
     return false;
+}
+void Vision::showPoints(int x[], int y[], int size, cv::String directory){
+    for(int i=0;i<5;i++){
+        inputVideo.grab();
+        inputVideo.retrieve(image);
+    }
+    for(int i=0;i<size;i++){
+        cv::circle(image, cv::Point(x[i],y[i]), 2, cv::Scalar(0, 0, 255));
+    }
+    cv::imshow("Windown", image);
+    cv::waitKey(0);
+    cv::imwrite("image/coleta1.png" , image);
 }
 
 
