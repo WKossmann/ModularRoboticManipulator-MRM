@@ -57,7 +57,6 @@ public:
 
         if ((rc = tcgetattr(fd, &oldtio)) < 0) {
             fprintf(stderr, "failed to get attr: %d, %s\n", fd, strerror(errno));
-            (-1);
         }
         
         tcflush(fd, TCIFLUSH);

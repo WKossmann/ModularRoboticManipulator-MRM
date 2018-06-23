@@ -17,6 +17,7 @@
 #define J2_A 9.5
 #define J2_B 9.5
 #define J1_H 7.6
+#define NO_WAIT false
 
 class ModularArm
 {
@@ -27,19 +28,17 @@ public:
     int start(std::string _port);
 
     //Comunication:
-    void sendMsgNoWait(std::string _msg);
-    void sendMsg(std::string _msg);
-    void sendMoveNoWait(double _value, int _joint);
-    void sendMove(double _value, int _joint);
-    void sendMoveMultiNoWait(double _value[], int _joint[], int size);
-    void sendMoveMulti(double _value[], int _joint[], int size);
+    void sendMsg(std::string _msg, bool _waitFlag);
+    void sendMove(double _value, int _joint, bool _waitFlag);
+    void sendMoveMulti(double _value[], int _joint[], int size, bool _waitFlag);
     void sendHome();
+    void sendHome(int _joint[], int _size);
     
     //Kinematics functions:
     void multiMatrix(double A[4][4], double B[4][4], double R[4][4]);
     void jointT1FowardK(double rad, double mat[4][4]);
     void jointT2FowardK(double rad, double mat[4][4]);
-    bool ForwardK(double angles[], int type[], int size, double pos[3]);
+    void ForwardK(double angles[], int type[], int size, double pos[3]);
 
 private:
 
@@ -58,38 +57,19 @@ int ModularArm::start(std::string _port = "/dev/ttyUSB0"){
     return ret;
 }
 
-void ModularArm::sendMsgNoWait(std::string _msg){
-    std::string discart;
-    arduino.read(discart, 4);
 
-    _msg += ";";
-    arduino.write(_msg);
-}
-
-void ModularArm::sendMsg(std::string _msg){
+void ModularArm::sendMsg(std::string _msg, bool _waitFlag = true){
     std::string discart;
     arduino.read(discart, 4);
     
     _msg += ";";
     arduino.write(_msg);
-    while(!arduino.read(discart, 1));
+    if(_waitFlag){
+        while(!arduino.read(discart, 1));
+    }
 }
 
-void ModularArm::sendMoveNoWait(double _value, int _joint){
-    std::string discart;
-    char joint;
-    arduino.read(discart, 4);
-
-    std::string msg = "G1 ";
-    joint = (char)((int)'A' + _joint);
-    msg += joint;
-    msg += std::to_string(_value);
-
-    msg += ";";
-    arduino.write(msg);
-}
-
-void ModularArm::sendMove(double _value, int _joint){
+void ModularArm::sendMove(double _value, int _joint, bool _waitFlag = true){
     std::string discart;
     char joint;
     arduino.read(discart, 4);
@@ -101,10 +81,12 @@ void ModularArm::sendMove(double _value, int _joint){
 
     msg += ";";
     arduino.write(msg);
-    while(!arduino.read(discart, 2));
+    if(_waitFlag){
+        while(!arduino.read(discart, 1));
+    }
 }
 
-void ModularArm::sendMoveMultiNoWait(double _value[], int _joint[], int size){
+void ModularArm::sendMoveMulti(double _value[], int _joint[], int size, bool _waitFlag = true){
     std::string discart;
     char joint;
     arduino.read(discart, 4);
@@ -119,24 +101,9 @@ void ModularArm::sendMoveMultiNoWait(double _value[], int _joint[], int size){
 
     msg += ";";
     arduino.write(msg);
-}
-
-void ModularArm::sendMoveMulti(double _value[], int _joint[], int size){
-    std::string discart;
-    char joint;
-    arduino.read(discart, 4);
-    
-    std::string msg = "G1 ";
-    for(int i=0;i<size;i++){
-        joint = (char)((int)'A' + _joint[i]);
-        msg += joint;
-        msg += std::to_string(_value[i]);
-        msg += " ";
+    if(_waitFlag){
+        while(!arduino.read(discart, 1));
     }
-
-    msg += ";";
-    arduino.write(msg);
-    while(!arduino.read(discart, 2));
 }
 
 void ModularArm::sendHome(){
@@ -144,6 +111,21 @@ void ModularArm::sendHome(){
     arduino.read(discart, 4);
 
     sendMsg("G28");   
+}
+void ModularArm::sendHome(int _joint[], int size){
+    std::string discart;
+    char joint;
+    arduino.read(discart, 4);
+
+    std::string msg = "G28 ";
+    for(int i=0;i<size;i++){
+        joint = (char)((int)'A' + _joint[i]);
+        msg += joint;
+        msg += " ";
+    }
+    msg += ";";
+    arduino.write(msg);
+    while(!arduino.read(discart, 1));
 }
 
 void ModularArm::multiMatrix(double A[4][4], double B[4][4], double R[4][4]){
@@ -204,7 +186,7 @@ void ModularArm::jointT2FowardK(double rad, double mat[4][4]){
     mat[3][3] = 1;
 }
 
-bool ModularArm::ForwardK(double angles[], int type[], int size, double pos[3]){
+void ModularArm::ForwardK(double angles[], int type[], int size, double pos[3]){
     double  T[4][4];
     double  R[4][4];
     double RT[4][4];
@@ -222,7 +204,7 @@ bool ModularArm::ForwardK(double angles[], int type[], int size, double pos[3]){
                 jointT2FowardK(angles[i]*M_PI/180.0, T);
             break;
             default:
-                return -1;
+                // return -1;
             break;
         }
         if(i==0){

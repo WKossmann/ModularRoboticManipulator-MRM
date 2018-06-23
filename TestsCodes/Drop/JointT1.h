@@ -3,6 +3,7 @@
 #define JointT1_h
 
 #include <AccelStepper.h>
+
 #define T1_MAX_STEP         13100
 #define T1_MIN_STEP         0
 #define T1_STEP_PER_DEGREE  44.44448

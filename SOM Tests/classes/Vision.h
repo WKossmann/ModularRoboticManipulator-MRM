@@ -16,7 +16,8 @@ public:
     ~Vision();
     bool start();
     bool getVisualPosition(int& x, int& y);
-    void showPoints(int x[], int y[], int size, cv::String directory);
+    void showPoints(int x[], int y[], int size, cv::Scalar color);
+    cv::VideoCapture inputVideo;
 
 private:
     cv::Ptr<cv::aruco::DetectorParameters> detectorParams;
@@ -24,7 +25,7 @@ private:
     std::vector<int> ids;
     std::vector<std::vector<cv::Point2f>> corners, rejected;
     cv::Mat image, imageCopy;
-    cv::VideoCapture inputVideo;
+    
 };
 
 Vision::Vision(){
@@ -77,17 +78,16 @@ bool Vision::getVisualPosition(int& _x, int& _y){
     }
     return false;
 }
-void Vision::showPoints(int x[], int y[], int size, cv::String directory){
+void Vision::showPoints(int x[], int y[], int size, cv::Scalar color){
     for(int i=0;i<5;i++){
         inputVideo.grab();
         inputVideo.retrieve(image);
     }
     for(int i=0;i<size;i++){
-        cv::circle(image, cv::Point(x[i],y[i]), 2, cv::Scalar(0, 0, 255));
+        cv::circle(image, cv::Point(x[i],y[i]), 2, color);
     }
     cv::imshow("Windown", image);
     cv::waitKey(0);
-    cv::imwrite("image/coleta1.png" , image);
 }
 
 

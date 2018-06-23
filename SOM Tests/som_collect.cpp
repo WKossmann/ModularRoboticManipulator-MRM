@@ -12,10 +12,11 @@ int main(){
     Vision vision;
 
     arm.start();
+    arm.sendMove(180,0);
     vision.start();
 
     //Variaveis:
-	double angle[3] = {0,0,0};
+	double angle[3] = {180,0,0};
 	int type[3] = {1,2,2};
 	double pos[3] = {0,0,0};
     int joint[3] = {0,1,2};
@@ -29,9 +30,9 @@ int main(){
 
     std::cout << "Colecting, please wait ...." << std::endl;
 
-    for(int i=140;i>=75;i-=3){
+    for(int i=140;i>=75;i-=5){
         if(crescente){
-            for(int j=70;j<=140;j+=3){
+            for(int j=70;j<=140;j+=5){
                 // if(j<85){
                 //     passointerno = 1;
                 // }else
@@ -68,7 +69,7 @@ int main(){
             }
             crescente = false;
         }else{
-            for(int j=140;j>=70;j-=3){
+            for(int j=140;j>=70;j-=5){
                 // if(j<85){
                 //     passointerno = 1;
                 // }else
@@ -124,9 +125,8 @@ int main(){
     }
     myfile.close();
 
-    //Salvando imagem:    
-    std::cout << "Diretorio de imagem: " << diretorioImag << std::endl;
-    vision.showPoints(points_x,points_y,cont, diretorioImag);
+    //Mostrando imagem resultante
+    vision.showPoints(points_x,points_y,cont, cv::Scalar(0, 0, 255));
 
     //Retornando para home:
     std::cout << "Retornando braço para posição inicial..." << std::endl;

@@ -5,6 +5,7 @@
 #define A_DIR_PIN           55
 #define A_ENABLE_PIN        38
 #define A_ENDSTOP_PIN       3
+#define A_INITIAL_ANGLE     0.0
 
 //Pinage of the second Joint (Type 2 Joint)
 #define B_STEP_PIN          60

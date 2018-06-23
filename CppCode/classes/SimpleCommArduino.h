@@ -67,7 +67,6 @@ int SimpleCommArduino::open(std::string comm_Port) {
 bool SimpleCommArduino::read(std::string &res, int size) {
     if (sp.isOpen()) {
         sizeIn = size;
-        int t = 0;
         int tamBuffer = 25;
 
         // limpar o buffer 
@@ -86,7 +85,7 @@ bool SimpleCommArduino::read(std::string &res, int size) {
 }
 
 int SimpleCommArduino::write(std::string command) {
-    int size;{
+    unsigned int size;{
 		// usleep(10000);
 	}
     for (size=0; size<command.size(); size++)

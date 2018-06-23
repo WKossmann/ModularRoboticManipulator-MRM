@@ -3,6 +3,8 @@
 
 #include <opencv2/highgui.hpp>
 #include <opencv2/aruco.hpp>
+#include <opencv2/core.hpp>
+#include <opencv/cv.hpp>
 #include <iostream>
 
 #define DICTIONARY_ID 16
@@ -63,10 +65,12 @@ bool Vision::getVisualPosition(double& _x, double& _y){
             _x = (corners[0][0].x + corners[0][1].x + corners[0][2].x + corners[0][3].x)/4;
             _y = (corners[0][0].y + corners[0][1].y + corners[0][2].y + corners[0][3].y)/4;
 
-            std::cout << ids[i] << " >> X: " <<  (int)_x << " Y: " << (int)_y << std::endl;
+
+            // std::cout << ids[i] << " >> X: " <<  (int)_x << " Y: " << (int)_y << std::endl;
             
             image.copyTo(imageCopy);
             cv::aruco::drawDetectedMarkers(imageCopy, corners, ids);
+            cv::circle(imageCopy, cv::Point(_x,_y), 4, cv::Scalar(0, 0, 255),2);
             imshow("out", imageCopy);
             return true;
         }
