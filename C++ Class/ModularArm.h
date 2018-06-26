@@ -10,7 +10,7 @@
 #ifndef ModularArm_h
 #define ModularArm_h
 
-#include "SimpleCommArduino.h"
+#include "include/SimpleCommArduino.h"
 #include <iostream>
 #include <cmath>
 
@@ -24,30 +24,21 @@ class ModularArm
 public:
     ModularArm();
     ~ModularArm();
-
     int start(std::string _port);
-
     //Comunication:
     void sendMsg(std::string _msg, bool _waitFlag);
     void sendMove(double _value, int _joint, bool _waitFlag);
     void sendMoveMulti(double _value[], int _joint[], int size, bool _waitFlag);
     void sendHome();
     void sendHome(int _joint[], int _size);
-    
     //Kinematics functions:
     void multiMatrix(double A[4][4], double B[4][4], double R[4][4]);
     void jointT1FowardK(double rad, double mat[4][4]);
     void jointT2FowardK(double rad, double mat[4][4]);
     void ForwardK(double angles[], int type[], int size, double pos[3]);
-
 private:
-
     SimpleCommArduino arduino;
-
 };
-
-// IMPLEMENTATIONS OF METHODS:
-
 ModularArm::ModularArm(){}
 ModularArm::~ModularArm(){}
 
@@ -56,7 +47,6 @@ int ModularArm::start(std::string _port = "/dev/ttyUSB0"){
     sendHome();
     return ret;
 }
-
 
 void ModularArm::sendMsg(std::string _msg, bool _waitFlag = true){
     std::string discart;
@@ -112,6 +102,7 @@ void ModularArm::sendHome(){
 
     sendMsg("G28");   
 }
+
 void ModularArm::sendHome(int _joint[], int size){
     std::string discart;
     char joint;
@@ -223,6 +214,5 @@ void ModularArm::ForwardK(double angles[], int type[], int size, double pos[3]){
     pos[1] = R[1][3];
     pos[2] = R[2][3];
 }
-
 
 #endif
