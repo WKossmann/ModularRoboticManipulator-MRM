@@ -5,7 +5,7 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-	ModularArm arm;	
+	ModularArm arm;	////
 	arm.start(); // Start serial comunication and reset stepper positions by sending the arm to home FOTO 9
 	arm.sendMove(90,0);
 
